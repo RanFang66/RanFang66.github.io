@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/custom/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/custom/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/custom/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/custom/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ranfang66.github.io.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="基本语法与规则Makefile 描述的是文件编译的规则，一条规则主要由两部分组成，依赖关系和命令： 12targets : prerequisites	command   targets: 规则的目标，可以是.o，可以是可执行文件，还可以是一个标签 prerequisites: 生成目标的依赖文件，可以是多个或者没有 command: make时需要执行的命令，可以是任意的shell命令，可以有多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Makefile Learning Notes">
+<meta property="og:url" content="http://ranfang66.github.io.com/2022/09/29/Makefile-Learning-Notes/index.html">
+<meta property="og:site_name" content="KissFire">
+<meta property="og:description" content="基本语法与规则Makefile 描述的是文件编译的规则，一条规则主要由两部分组成，依赖关系和命令： 12targets : prerequisites	command   targets: 规则的目标，可以是.o，可以是可执行文件，还可以是一个标签 prerequisites: 生成目标的依赖文件，可以是多个或者没有 command: make时需要执行的命令，可以是任意的shell命令，可以有多">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-09-29T11:11:06.000Z">
+<meta property="article:modified_time" content="2022-09-30T17:04:51.461Z">
+<meta property="article:author" content="Ran Fang">
+<meta property="article:tag" content="embedded">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://ranfang66.github.io.com/2022/09/29/Makefile-Learning-Notes/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://ranfang66.github.io.com/2022/09/29/Makefile-Learning-Notes/","path":"2022/09/29/Makefile-Learning-Notes/","title":"Makefile Learning Notes"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Makefile Learning Notes | KissFire</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">KissFire</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">HomePage of Ran Fang</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-resume"><a href="/cv/" rel="section"><i class="fa fa-address-card fa-fw"></i>resume</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B8%8E%E8%A7%84%E5%88%99"><span class="nav-number">1.</span> <span class="nav-text">基本语法与规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile-%E4%B8%AD%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="nav-number">2.</span> <span class="nav-text">Makefile 中的通配符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">Makefile中的变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">变量的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%B5%8B%E5%80%BC"><span class="nav-number">3.2.</span> <span class="nav-text">变量的基本赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8F%98%E9%87%8F"><span class="nav-number">3.3.</span> <span class="nav-text">自动化变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile-%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E6%90%9C%E7%B4%A2%E8%B7%AF%E5%BE%84"><span class="nav-number">4.</span> <span class="nav-text">Makefile 目标文件搜索路径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VPATH"><span class="nav-number">4.1.</span> <span class="nav-text">VPATH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vpath"><span class="nav-number">4.2.</span> <span class="nav-text">vpath</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">4.3.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile-%E9%9A%90%E5%90%AB%E8%A7%84%E5%88%99"><span class="nav-number">5.</span> <span class="nav-text">Makefile 隐含规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile-%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="nav-number">6.</span> <span class="nav-text">Makefile 条件判断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ifeq-%E5%92%8C-ifneq"><span class="nav-number">6.1.</span> <span class="nav-text">ifeq 和 ifneq</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ifdef-%E5%92%8C-ifndef"><span class="nav-number">6.2.</span> <span class="nav-text">ifdef 和 ifndef</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile-%E4%BC%AA%E7%9B%AE%E6%A0%87"><span class="nav-number">7.</span> <span class="nav-text">Makefile 伪目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile%E4%B8%AD%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0"><span class="nav-number">8.</span> <span class="nav-text">Makefile中的字符串处理函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="nav-number">8.1.</span> <span class="nav-text">模式字符串替换函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="nav-number">8.2.</span> <span class="nav-text">字符串替换函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%BB%E7%A9%BA%E6%A0%BC%E5%87%BD%E6%95%B0"><span class="nav-number">8.3.</span> <span class="nav-text">去空格函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9F%A5%E6%89%BE%E5%87%BD%E6%95%B0"><span class="nav-number">8.4.</span> <span class="nav-text">字符串查找函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F%E8%BF%87%E6%BB%A4%E5%87%BD%E6%95%B0"><span class="nav-number">8.5.</span> <span class="nav-text">模式过滤函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E8%BF%87%E6%BB%A4%E5%87%BD%E6%95%B0"><span class="nav-number">8.6.</span> <span class="nav-text">反向过滤函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E5%87%BD%E6%95%B0"><span class="nav-number">8.7.</span> <span class="nav-text">排序函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%BB%E5%8D%95%E8%AF%8D%E5%87%BD%E6%95%B0"><span class="nav-number">8.8.</span> <span class="nav-text">去单词函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile-%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D%E6%93%8D%E4%BD%9C%E5%87%BD%E6%95%B0"><span class="nav-number">9.</span> <span class="nav-text">Makefile 中的文件名操作函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E7%9B%AE%E5%BD%95%E5%87%BD%E6%95%B0"><span class="nav-number">9.1.</span> <span class="nav-text">取目录函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E6%96%87%E4%BB%B6%E5%87%BD%E6%95%B0"><span class="nav-number">9.2.</span> <span class="nav-text">取文件函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E5%90%8E%E7%BC%80%E5%87%BD%E6%95%B0"><span class="nav-number">9.3.</span> <span class="nav-text">取后缀函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E5%89%8D%E7%BC%80%E5%87%BD%E6%95%B0"><span class="nav-number">9.4.</span> <span class="nav-text">取前缀函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%90%8E%E7%BC%80%E5%90%8D%E5%87%BD%E6%95%B0"><span class="nav-number">9.5.</span> <span class="nav-text">添加后缀名函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%89%8D%E7%BC%80%E5%90%8D%E5%87%BD%E6%95%B0"><span class="nav-number">9.6.</span> <span class="nav-text">添加前缀名函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%E5%87%BD%E6%95%B0"><span class="nav-number">9.7.</span> <span class="nav-text">链接函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E6%96%87%E4%BB%B6%E5%90%8D%E5%87%BD%E6%95%B0"><span class="nav-number">9.8.</span> <span class="nav-text">获取匹配模式文件名函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exam"><span class="nav-number">9.9.</span> <span class="nav-text">Exam</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">10.</span> <span class="nav-text">Makefile其他常用函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%87%BD%E6%95%B0"><span class="nav-number">10.1.</span> <span class="nav-text">遍历函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="nav-number">10.2.</span> <span class="nav-text">条件执行函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="nav-number">10.3.</span> <span class="nav-text">参数替换函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%B1%9E%E6%80%A7%E5%87%BD%E6%95%B0"><span class="nav-number">10.4.</span> <span class="nav-text">变量属性函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Makefile%E7%9A%84%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E4%B8%8E%E5%B5%8C%E5%A5%97%E6%89%A7%E8%A1%8C"><span class="nav-number">11.</span> <span class="nav-text">Makefile的文件包含与嵌套执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Makefile%E5%B5%8C%E5%A5%97%E6%89%A7%E8%A1%8C%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">11.1.</span> <span class="nav-text">Makefile嵌套执行的两种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Make%E5%B5%8C%E5%A5%97%E6%89%A7%E8%A1%8C%E6%97%B6%E7%9A%84%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">11.2.</span> <span class="nav-text">Make嵌套执行时的参数传递</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ran Fang"
+      src="/images/custom/ranfang.jpg">
+  <p class="site-author-name" itemprop="name">Ran Fang</p>
+  <div class="site-description" itemprop="description">The homepage of Ran Fang, a learner and developer, where to record his life and work</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ranfang66" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ranfang66" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:ranfang66@gmail.com" title="E-Mail → mailto:ranfang66@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/FireOnMe1" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;FireOnMe1" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/id=100075973842339" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;id&#x3D;100075973842339" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>FB Page</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/frankraven9" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;frankraven9" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://ranfang66.github.io.com/2022/09/29/Makefile-Learning-Notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom/ranfang.jpg">
+      <meta itemprop="name" content="Ran Fang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KissFire">
+      <meta itemprop="description" content="The homepage of Ran Fang, a learner and developer, where to record his life and work">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Makefile Learning Notes | KissFire">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Makefile Learning Notes
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-09-29 19:11:06" itemprop="dateCreated datePublished" datetime="2022-09-29T19:11:06+08:00">2022-09-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-10-01 01:04:51" itemprop="dateModified" datetime="2022-10-01T01:04:51+08:00">2022-10-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Learning/" itemprop="url" rel="index"><span itemprop="name">Learning</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="基本语法与规则"><a href="#基本语法与规则" class="headerlink" title="基本语法与规则"></a>基本语法与规则</h2><p>Makefile 描述的是文件编译的规则，一条规则主要由两部分组成，依赖关系和命令：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">targets : prerequisites</span><br><span class="line">	command</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>targets: 规则的目标，可以是.o，可以是可执行文件，还可以是一个标签</li>
+<li>prerequisites: 生成目标的依赖文件，可以是多个或者没有</li>
+<li>command: make时需要执行的命令，可以是任意的shell命令，可以有多条命令，每条命令占一行。</li>
+</ul>
+<span id="more"></span>
+
+<p>Makefile中主要包含的内容：</p>
+<ol>
+<li>显示规则：显式说明如何生成一个目标文件</li>
+<li>隐晦规则：make命令支持自动推导功能</li>
+<li>变量的定义：Makefile中可以定义一系列变量，其用法与shell中的变量类似。</li>
+<li>文件指示：可以在一个makefile中引用另一个makefile，类似c中的include。可以根据某些情况制定makefile中的有效部分，类似c中的条件编译。还可以自定义多行的命令。</li>
+<li>注释：与shell相同，用#号注释。</li>
+</ol>
+<p>make的执行过程：</p>
+<p>在shell中执行make之后，会自动搜索Makefile文件，并且将脚本中的第一条规则</p>
+<p>定义的目标作为最终目标，然后检查目标的依赖，这时有三种情况：</p>
+<ol>
+<li>如果依赖的中间文件不存在，则会根据规则生成中间文件</li>
+<li>如果依赖的中间文件存在，并且没有它所依赖的生成文件新，则会重新生成这个中间文件。</li>
+<li>如果依赖的中间文件存在，并且它所依赖的生成文件也没有更新，则不会重新生成。</li>
+</ol>
+<h2 id="Makefile-中的通配符"><a href="#Makefile-中的通配符" class="headerlink" title="Makefile 中的通配符"></a>Makefile 中的通配符</h2><p>Makefile 支持shell中的通配符，如下：</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>匹配0个或多个任意字符</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配任意一个字符</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配方括号中制定的字符</td>
+</tr>
+</tbody></table>
+<p>通配符在引用变量时的使用，在写依赖规则时，如果直接使用有通配符的变量，会出现错误。如</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">obj = *.c</span><br><span class="line">test : <span class="variable">$(obj)</span></span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br></pre></td></tr></table></figure>
+
+<p>当按如上规则make时，会报错找不到*.c。这是因为变量引用中的通配符并不会被展开。而如果想在引用的变量中使用通配符，则需要借助wildcard函数，这个函数会在引用变量时进行通配符的展开，如：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">obj = <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span></span><br><span class="line">test : <span class="variable">$(obj)</span></span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br></pre></td></tr></table></figure>
+
+<p>Makefile 中还支持 % 通配符，也是匹配任意个字符，</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test : test1.o test2.o</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line">%.o : %.c</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br></pre></td></tr></table></figure>
+
+<p>%.o会把所有.o文件组合成一个列表，每次从列表中取出一个文件，然后找到文件中和%名称相同的.c文件，然后执行下面的文件，直至列表中的文件取完。这个属于Makefile中静态模规则：规则存在多个目标，规则存在多个目标，并且不同的目标可以根据目标文件的名字自动构造出依赖文件。</p>
+<h2 id="Makefile中的变量"><a href="#Makefile中的变量" class="headerlink" title="Makefile中的变量"></a>Makefile中的变量</h2><h3 id="变量的定义"><a href="#变量的定义" class="headerlink" title="变量的定义"></a>变量的定义</h3><p><code>变量名称 = 值列表</code></p>
+<p>变量名称可以由字母数字和下划线构成，等号左右的空格没有要求，值列表可以是0项，也可以是多项，中间用空格分隔。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJ = a.o b.o c.o</span><br><span class="line">test : <span class="variable">$(OBJ)</span></span><br><span class="line">	gcc -o test <span class="variable">$(OBJ)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="变量的基本赋值"><a href="#变量的基本赋值" class="headerlink" title="变量的基本赋值"></a>变量的基本赋值</h3><ul>
+<li>简单赋值(:&#x3D;)   编程语句中的常规赋值方式，只对当前语句的变量有效</li>
+<li>递归赋值(&#x3D;)    所有目标变量相关的变量都会受影响，赋值语句可能影响多个变量</li>
+<li>条件赋值(?&#x3D;)   如果变量未定义，则使用符号中的值定义变量，</li>
+<li>追加赋值(+&#x3D;)   在变量的值列表后面追加一项新的值</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x = abc</span><br><span class="line">y = <span class="variable">$(x)</span>d</span><br><span class="line">x := efg	<span class="comment"># 简单赋值 x=efg, y=abcd</span></span><br><span class="line">x = efg		<span class="comment"># 递归赋值 x=efg, y=efgd</span></span><br><span class="line">x ?= efg	<span class="comment"># 条件赋值 x=abc, y=abcd</span></span><br><span class="line">x += efg	<span class="comment"># 追加赋值 x=abc efg, y=abcd</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="自动化变量"><a href="#自动化变量" class="headerlink" title="自动化变量"></a>自动化变量</h3><table>
+<thead>
+<tr>
+<th align="center">自动化变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">$@</td>
+<td>表示规则的目标文件名。如果目标是一个文档文件（Linux 中，一般成 .a 文件为文档文件，也成为静态的库文件）， 那么它代表这个文档的文件名。在多目标模式规则中，它代表的是触发规则被执行的文件名。</td>
+</tr>
+<tr>
+<td align="center">$%</td>
+<td>当目标文件是一个静态库文件时，代表静态库的一个成员名。</td>
+</tr>
+<tr>
+<td align="center">$&lt;</td>
+<td>规则的第一个依赖的文件名。如果是一个目标文件使用隐含的规则来重建，则它代表由隐含规则加入的第一个依赖文件。</td>
+</tr>
+<tr>
+<td align="center">$?</td>
+<td>所有比目标文件更新的依赖文件列表，空格分隔。如果目标文件时静态库文件，代表的是库文件（.o 文件）。</td>
+</tr>
+<tr>
+<td align="center">$^</td>
+<td>代表的是所有依赖文件列表，使用空格分隔。如果目标是静态库文件，它所代表的只能是所有的库成员（.o 文件）名。 一个文件可重复的出现在目标的依赖中，变量$^ 只记录它的第一次引用的情况。就是说会去掉重复的依赖文件。</td>
+</tr>
+<tr>
+<td align="center">$+</td>
+<td>类似“$^”，但是它保留了依赖文件中重复出现的文件。主要用在程序链接时库的交叉引用场合。</td>
+</tr>
+<tr>
+<td align="center">$*</td>
+<td>在模式规则和静态模式规则中，代表“茎”。“茎”是目标模式中“%”所代表的部分（当文件名中存在目录时， “茎”也包含目录部分）。</td>
+</tr>
+</tbody></table>
+<h2 id="Makefile-目标文件搜索路径"><a href="#Makefile-目标文件搜索路径" class="headerlink" title="Makefile 目标文件搜索路径"></a>Makefile 目标文件搜索路径</h2><p>有两种方式可以制定Makefile脚本搜索目标文件的目录路径：一般搜索<code>VPATH</code> 和选择搜索<code>vpath</code>.</p>
+<p>VPATH和vpath的区别在于，VPATH是一个变量，而且是环境变量，使用时需要指定文件的路径；vpath是关键字，按照指定的模式搜索，搜索时不仅要加上路径，还要加上限值条件。</p>
+<h3 id="VPATH"><a href="#VPATH" class="headerlink" title="VPATH"></a>VPATH</h3><p>在Makefile中按如下形式使用VPATH指定搜索路径：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VPATH := src</span><br></pre></td></tr></table></figure>
+
+<p>当要指定多个路径时，不同的路径之间用空格或者冒号分隔。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VPAHT := path1:path2</span><br></pre></td></tr></table></figure>
+
+<h3 id="vpath"><a href="#vpath" class="headerlink" title="vpath"></a>vpath</h3><p>vpath按照给定模式在指定目录中搜索，使用方法如下：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. <span class="keyword">vpath</span> PATTERN DIRECTORIES</span><br><span class="line">2. <span class="keyword">vpath</span> PATTERN</span><br><span class="line">3. <span class="keyword">vpath</span></span><br></pre></td></tr></table></figure>
+
+<p>用法二的意思是清除符合模式 的搜索目录，用法3 单独使用vpath是清楚所有已设置的文件搜索路径。</p>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>假设现在有一个工程，包含两个目录，src目录下包含main.c, module1.c, module2.c源文件，inc目录下包含module1.h, module2.h头文件。通过如下方式先声明文件搜索路径。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">vpath</span> %.c 	src</span><br><span class="line"><span class="keyword">vpath</span> %.h	inc		<span class="comment">## 或者使用 VPATH = src inc</span></span><br><span class="line">main : main.o module1.o module2.o</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line">main.o : main.c</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line">module1.o : module1.c module1.h</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line">module2.o : module2.c module2.h</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Makefile-隐含规则"><a href="#Makefile-隐含规则" class="headerlink" title="Makefile 隐含规则"></a>Makefile 隐含规则</h2><h2 id="Makefile-条件判断"><a href="#Makefile-条件判断" class="headerlink" title="Makefile 条件判断"></a>Makefile 条件判断</h2><p>在实际工程中，经常会遇到要根据某个条件执行不同的编译操作的情况。这是就需要在Makefile中能够实现分条件执行语句的功能。Makefile中提供以下条件判断关键字：</p>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>说明</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ifeq</td>
+<td>判断参数是否相等</td>
+<td></td>
+</tr>
+<tr>
+<td>ifneq</td>
+<td>判断参数是否不等</td>
+<td></td>
+</tr>
+<tr>
+<td>ifdef</td>
+<td>判断是否有值</td>
+<td></td>
+</tr>
+<tr>
+<td>ifndef</td>
+<td>判断是否没有值</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="ifeq-和-ifneq"><a href="#ifeq-和-ifneq" class="headerlink" title="ifeq 和 ifneq"></a>ifeq 和 ifneq</h3><p>使用语法</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ifeq</span> (ARG1, arg2)</span><br><span class="line"><span class="comment"># ifeq &quot;ARG1&quot; &quot;ARG2&quot;</span></span><br><span class="line"><span class="comment"># ifeq &#x27;ARG1&#x27; &#x27;ARG2&#x27;</span></span><br><span class="line">	xxx</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	xxx</span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
+
+<p>举例</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gcc_libs = -lgnu</span><br><span class="line">default_libs = </span><br><span class="line"><span class="keyword">ifeq</span> (<span class="variable">$(CC)</span>, gcc)</span><br><span class="line">	libs = <span class="variable">$(gcc_libs)</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	libs = <span class="variable">$(default_libs)</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line">foo : <span class="variable">$(objects)</span></span><br><span class="line">	<span class="variable">$(CC)</span> -o foo <span class="variable">$(objects)</span> <span class="variable">$(libs)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="ifdef-和-ifndef"><a href="#ifdef-和-ifndef" class="headerlink" title="ifdef 和 ifndef"></a>ifdef 和 ifndef</h3><p>使用语法：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ifdef</span> VARIABLE_NAME</span><br></pre></td></tr></table></figure>
+
+<h2 id="Makefile-伪目标"><a href="#Makefile-伪目标" class="headerlink" title="Makefile 伪目标"></a>Makefile 伪目标</h2><p>伪目标的含义是它并不会创建目标文件，但是会去执行这个目标下面的命令。使用伪目标有两点原因：</p>
+<ol>
+<li><p>避免Makefile中只用来执行命令的目标与时间的文件出现名字冲突</p>
+</li>
+<li><p>提高执行make时的效率</p>
+</li>
+<li><p>文件清理操作clean作为伪目标的实现：</p>
+</li>
+</ol>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.PHONY : clean</span><br><span class="line">clean :</span><br><span class="line">	rm -rf *.o <span class="variable">$(PROGRAM)</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>make 命令对于多个目录的并行和递归操作：</li>
+</ol>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SUBDIRS = foo bar baz</span><br><span class="line">.PHONY : subdirs <span class="variable">$(SUBDIRS)</span></span><br><span class="line">subdirs : <span class="variable">$(SUBDIRS)</span></span><br><span class="line"><span class="variable">$(SUBDIRS)</span> : </span><br><span class="line">	<span class="variable">$(MAKE)</span> -C <span class="variable">$@</span></span><br><span class="line"><span class="section">foo: baz</span></span><br></pre></td></tr></table></figure>
+
+<p>​			上述脚本实现了递归的调用三个子目录下的make命令。</p>
+<ol start="3">
+<li><p>伪目标实现多目标文件的生成</p>
+<p>如果想要在一个Makefile里控制生成多个可执行文件，也可以借助伪目标实现：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.PHONY all</span><br><span class="line">all : test1 test2 test3</span><br><span class="line">test1 : test1.o</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line">test2 : test2.o</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line">test3 : test3.o</span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br></pre></td></tr></table></figure>
+
+<p>上述脚本通过声明一个all伪目标，实现同时生成test1, test2, test3三个目标可执行文件。</p>
+</li>
+</ol>
+<h2 id="Makefile中的字符串处理函数"><a href="#Makefile中的字符串处理函数" class="headerlink" title="Makefile中的字符串处理函数"></a>Makefile中的字符串处理函数</h2><p>Makefile中调用函数的语法：</p>
+<p><code>$(&lt;function&gt; &lt;arguments&gt;)</code> 或者 <code>$&#123;&lt;function&gt; &lt;arguments&gt;&#125;</code> </p>
+<p>其中function是函数名，arguments是参数列表。函数名和参数列表之间用空格分开，参数列表中的多个参数用逗号分隔。</p>
+<h3 id="模式字符串替换函数"><a href="#模式字符串替换函数" class="headerlink" title="模式字符串替换函数"></a>模式字符串替换函数</h3><p>使用格式：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">patsubst</span> &lt;pattern&gt;, &lt;replacement&gt;, &lt;text&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>说明：查找text中符合模式pattern的部分，如果找到匹配的，则用replacement替换。返回替换后的新字符串。</p>
+<p>常见用法示例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C_SOURCE = <span class="variable">$(<span class="built_in">shell</span> find . -name *.c)</span></span><br><span class="line">C_OBJECTS=<span class="variable">$(<span class="built_in">patsubst</span> %.c, %.o, <span class="variable">$(C_SOURCE)</span>)</span></span><br><span class="line">main : <span class="variable">$(C_OBJECTS)</span></span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line"><span class="variable">$(C_OBJECTS)</span> : <span class="variable">$(C_SOURCE)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="字符串替换函数"><a href="#字符串替换函数" class="headerlink" title="字符串替换函数"></a>字符串替换函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">subst</span> &lt;from&gt;, &lt;to&gt;, &lt;text&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>将text字符串中的from替换成to，返回替换后的新字符串</p>
+<p>用法示例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJ = <span class="variable">$(<span class="built_in">subst</span> Beijing, Shanghai, I love Beijing)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment"># 显示 I love Shanghai</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="去空格函数"><a href="#去空格函数" class="headerlink" title="去空格函数"></a>去空格函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">strip</span> &lt;string&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>去掉string开头和结尾的空格，并且将中间连续多个空格合并为一个空格。返回去空格后的字符串。</p>
+<h3 id="字符串查找函数"><a href="#字符串查找函数" class="headerlink" title="字符串查找函数"></a>字符串查找函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">findstring</span> &lt;find&gt;, &lt;in&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>在in中查找find，如果查找的目标字符串存在，返回目标字符串，如果不存在返回空。</p>
+<p>用法示例</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJ = <span class="variable">$(<span class="built_in">findstring</span> you, I hate you)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment"># 显示 you</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="模式过滤函数"><a href="#模式过滤函数" class="headerlink" title="模式过滤函数"></a>模式过滤函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">filter</span> &lt;pattern&gt;, &lt;text&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>过滤出text中符合模式pattern的字符串，可以有多个pattern，返回所有符合pattern的字符串。</p>
+<p>用法示例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJ = <span class="variable">$(<span class="built_in">filter</span> %.c %.o, foo1.c foo2.o foo3.s)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示foo1.c foo2.o</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="反向过滤函数"><a href="#反向过滤函数" class="headerlink" title="反向过滤函数"></a>反向过滤函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">filter</span>-out &lt;pattern&gt;, &lt;text&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>与filter函数相反，滤除所有符合pattern模式的字符串，返回所有不符合pattern的字符串。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJ = <span class="variable">$(<span class="built_in">filter</span>-out %.c %.o, foo1.c foo2.o foo3.s)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示foo3.s</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="排序函数"><a href="#排序函数" class="headerlink" title="排序函数"></a>排序函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">sort</span> &lt;list&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>将list中的单词按照单词升序排序，返回排序后的字符串</p>
+<p>示例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJ = <span class="variable">$(<span class="built_in">sort</span> orange apple pear apple)</span></span><br><span class="line"><span class="section">all: </span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span> <span class="comment"># 显示 apple orange pear</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>notice</strong> : sort会去掉重复的字符串</p>
+<h3 id="去单词函数"><a href="#去单词函数" class="headerlink" title="去单词函数"></a>去单词函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">word</span> &lt;n&gt;, &lt;text&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>取出字符串text中的第n个单词，返回取出的第n个单词。</p>
+<p>示例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJ = <span class="variable">$(<span class="built_in">word</span> 2, foo1.c foo2.c foo3.c)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment"># 显示 foo2.c</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Makefile-中的文件名操作函数"><a href="#Makefile-中的文件名操作函数" class="headerlink" title="Makefile 中的文件名操作函数"></a>Makefile 中的文件名操作函数</h2><h3 id="取目录函数"><a href="#取目录函数" class="headerlink" title="取目录函数"></a>取目录函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">dir</span> &lt;names&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>从文件名序列names中取出所有文件的目录部分，如果文件名不包含任何路径，则取出的是“.&#x2F;”。返回文件序列的目录部分。</p>
+<h3 id="取文件函数"><a href="#取文件函数" class="headerlink" title="取文件函数"></a>取文件函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">notdir</span> &lt;names&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>从文件名序列names中取出所欲的非目录部分，返回取出的非目录部分。</p>
+<h3 id="取后缀函数"><a href="#取后缀函数" class="headerlink" title="取后缀函数"></a>取后缀函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">suffix</span> &lt;names&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>从文件名序列names中取出各个文件的后缀名，如果文件名没有后缀，则取出结果为空，返回取出的后缀名序列。</p>
+<h3 id="取前缀函数"><a href="#取前缀函数" class="headerlink" title="取前缀函数"></a>取前缀函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">basename</span> &lt;names&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>从文件名序列names中取出各个文件名的前缀部分（包含路径），返回取出的前缀名序列。</p>
+<h3 id="添加后缀名函数"><a href="#添加后缀名函数" class="headerlink" title="添加后缀名函数"></a>添加后缀名函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">addsuffix</span> &lt;<span class="built_in">suffix</span>&gt;, &lt;names&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>将后缀suffix添加到文件名列表names中的每个单词后面。返回添加后缀后的文件名序列。</p>
+<h3 id="添加前缀名函数"><a href="#添加前缀名函数" class="headerlink" title="添加前缀名函数"></a>添加前缀名函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">addprefix</span> &lt;prefix&gt;, &lt;names&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>将前缀prefix添加到文件名序列names中的每个单词前面，返回添加前缀之后的文件名序列。</p>
+<h3 id="链接函数"><a href="#链接函数" class="headerlink" title="链接函数"></a>链接函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">join</span> &lt;list1&gt;, &lt;list2&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>将list2中的单词一一对应的拼接到list1中的单词后，如果list1的单词比list2多，那么list1后面多出来的单词保持不变。如果list1的单词比list2少，那么list2后面多出来的单词保持不变。返回拼接之后的单词序列</p>
+<h3 id="获取匹配模式文件名函数"><a href="#获取匹配模式文件名函数" class="headerlink" title="获取匹配模式文件名函数"></a>获取匹配模式文件名函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">wildcard</span> PATTERN)</span></span><br></pre></td></tr></table></figure>
+
+<p>列出当前目录下所有符合模式的PATTERN格式的文件名，返回由空格分隔的当前目录下所有符合PATTERN模式的文件名。</p>
+<h3 id="Exam"><a href="#Exam" class="headerlink" title="Exam"></a>Exam</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">OBJ = <span class="variable">$(<span class="built_in">dir</span> src/main.c src/module1.c inc/module1.h bsp.h)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示 src/ src/ inc/ ./</span></span><br><span class="line">	</span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">notdir</span> src/main.c src/module1.c inc/module1.h bsp.h)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示main.c module1.c module1.h bsp.h</span></span><br><span class="line">	</span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">suffix</span> src/main.c src/module1.c inc/module1.h bsp.h)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示.c .c .h .h</span></span><br><span class="line">	</span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">basename</span> src/main.c src/module1.c inc/module1.h bsp.h)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示 src/main src/module1 inc/module1 bsp</span></span><br><span class="line"></span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">addsuffix</span> .c, src/main src/module1)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示 src/main.c src/module1.c</span></span><br><span class="line">	</span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">addprefix</span> src/, main.c module1.c)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示 src/main.c src/module1.c</span></span><br><span class="line">	</span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">join</span> main module1 module2, .c .h)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>	<span class="comment">#显示 main.c module1.h module2</span></span><br><span class="line">	</span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">wildcard</span> *.c *.h)</span></span><br><span class="line">main : <span class="variable">$(OBJ)</span></span><br><span class="line">	gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line">	</span><br></pre></td></tr></table></figure>
+
+<h2 id="Makefile其他常用函数"><a href="#Makefile其他常用函数" class="headerlink" title="Makefile其他常用函数"></a>Makefile其他常用函数</h2><h3 id="遍历函数"><a href="#遍历函数" class="headerlink" title="遍历函数"></a>遍历函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">foreach</span> &lt;var&gt;, &lt;list&gt;, &lt;text&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>把参数list中的单词逐一取出放到参数var所指定的变量中，然后再执行text所包含的表达式，最终遍历完成后返回由空格分隔的遍历执行结果。</p>
+<p><strong>Notice</strong> foreach函数中的var是一个临时变量，作用域只在该函数中，执行结束后就不再起作用。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name = main module1 module2</span><br><span class="line">files = <span class="variable">$(<span class="built_in">foreach</span> n, <span class="variable">$(name)</span>, <span class="variable">$(n)</span>.o)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(files)</span>  <span class="comment">#显示 main.o module1.o module2.o</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="条件执行函数"><a href="#条件执行函数" class="headerlink" title="条件执行函数"></a>条件执行函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">if</span> &lt;condition&gt;, &lt;then-part&gt;)</span></span><br><span class="line"><span class="variable">$(<span class="built_in">if</span> &lt;condition&gt;, &lt;then-part&gt;, &lt;else-part&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>当condition为真，则执行then-part部分，否则执行else-part部分，返回执行结果，如果condition为假且else-part为空，则返回空字符串。condition为真的条件为condition为非空字符串。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">OBJ = foo.c</span><br><span class="line">OBJ = <span class="variable">$(<span class="built_in">if</span> <span class="variable">$(OBJ)</span>, <span class="variable">$(OBJ)</span>, main.c)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(OBJ)</span>		<span class="comment">#显示 foo.c</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="参数替换函数"><a href="#参数替换函数" class="headerlink" title="参数替换函数"></a>参数替换函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">call</span> &lt;expression&gt;, &lt;parm1&gt;, &lt;parm2&gt;, &lt;parm3&gt;, ...)</span></span><br></pre></td></tr></table></figure>
+
+<p>expression是一个包含参数的表达式，但call被执行时，expression中的参数变量$(1)，$(2)，$(3)等会被后面的参数parm1， parm2, parm3依次取代。最终返回替换完之后expression的值。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">files = $(2).c $(1).c</span><br><span class="line">obj = <span class="variable">$(<span class="built_in">call</span> files, main, module)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	@echo <span class="variable">$(obj)</span>	<span class="comment">#显示 module.c main.c</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="变量属性函数"><a href="#变量属性函数" class="headerlink" title="变量属性函数"></a>变量属性函数</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(<span class="built_in">origin</span> &lt;variable&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>origin 函数不会操作变量的值，他只会返回这个变量的来源。这里variable是变量的名字，不应该是引用，最好不要在variable中使用$字符。下面是origin函数的返回值：</p>
+<table>
+<thead>
+<tr>
+<th>返回值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>undefined</td>
+<td>variable从没有定义过</td>
+</tr>
+<tr>
+<td>default</td>
+<td>variable是默认定义的变量，如CC</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>variable是一个环境变量，并且makefile执行时没有-e选项</td>
+</tr>
+<tr>
+<td>file</td>
+<td>variable是在Makefile中定义的变量</td>
+</tr>
+<tr>
+<td>command line</td>
+<td>variable这个变量是被命令执行的</td>
+</tr>
+<tr>
+<td>override</td>
+<td>variable是被override指示符重新定义的</td>
+</tr>
+<tr>
+<td>automatic</td>
+<td>variable是一个命令行中的自动化变量</td>
+</tr>
+</tbody></table>
+<h2 id="Makefile的文件包含与嵌套执行"><a href="#Makefile的文件包含与嵌套执行" class="headerlink" title="Makefile的文件包含与嵌套执行"></a>Makefile的文件包含与嵌套执行</h2><p> Makefile中可以通过include关键字来包含其他文件，当make命令遇到include关键字时，会暂停读取当前的Makefile，而是取读取include包含的文件，读取结束后再继续运行Makefile文件。具体用法如下：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> &lt;filenames&gt;</span><br><span class="line"><span class="keyword">-include</span> &lt;filenames&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上述两种使用方式的区别在于：</p>
+<ul>
+<li>使用 <code>include &lt;filenames&gt;</code> ，make 在处理程序的时候，文件列表中的任意一个文件不存在的时候或者是没有规则去创建这个文件的时候，make 程序将会提示错误并保存退出。</li>
+<li>使用 <code>-include &lt;filenames&gt;</code>，当包含的文件不存在或者是没有规则去创建它的时候，make 将会继续执行程序，只有真正由于不能完成终极目标重建的时候我们的程序才会提示错误保存退出。</li>
+</ul>
+<p><strong>Notice</strong> :使用include包含进来的 Makefile 文件中，如果存在函数或者是变量的引用，它们会在包含的 Makefile 中展开。</p>
+<h3 id="Makefile嵌套执行的两种方式"><a href="#Makefile嵌套执行的两种方式" class="headerlink" title="Makefile嵌套执行的两种方式"></a>Makefile嵌套执行的两种方式</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">subsystem:</span></span><br><span class="line">	cd subdir &amp;&amp; <span class="variable">$(MAKE)</span></span><br></pre></td></tr></table></figure>
+
+<p>上述脚本使当前的make命令切换目录到指定的目录subdir，该目录下也有一个Makefile文件用于描述subdir下文件的编译规则，然后会再该目录下执行make命令，执行完之后再返回外层的make执行中。这样实现了make的嵌套执行，最外层的Makefile一般称为总控Makefile。</p>
+<p>另一种写法是：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">subsystem:</span></span><br><span class="line">	<span class="variable">$(MAKE)</span> -C subdir</span><br></pre></td></tr></table></figure>
+
+<p>make的嵌套执行过程中，有一个系统变量“CURDIR”，它表示make的工作目录。当使用-C选项时，命令就会进入指定的目录中，此变量也会被重新赋值。</p>
+<h3 id="Make嵌套执行时的参数传递"><a href="#Make嵌套执行时的参数传递" class="headerlink" title="Make嵌套执行时的参数传递"></a>Make嵌套执行时的参数传递</h3><p>使用make嵌套执行时，如果需要传递变量，可以如下使用：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> &lt;variable&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果需要传递所有变量，直接使用export不添加变量名即可。</p>
+<p>有两个变量SHELL和MAKEFLAGS在不管是否使用export关键字的情况下都会传递给被嵌套的Makefile。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/embedded/" rel="tag"># embedded</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/09/29/Cpp-Learning-Notes-Template/" rel="next" title="C++ Learning Notes-Template">
+                  C++ Learning Notes-Template <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ran Fang</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
