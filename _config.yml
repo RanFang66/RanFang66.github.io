@@ -104,4 +104,7 @@ theme: next
 deploy:
   type: git
   repo: https://github.com/RanFang66/RanFang66.github.io.git
-  branch: master 
+  branch: master
+
+sitemap:
+  path: sitemap.xml
