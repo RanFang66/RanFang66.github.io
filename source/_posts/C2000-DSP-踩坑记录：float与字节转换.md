@@ -65,7 +65,7 @@ int main(void)
 
 将上述代码再PC上测试了一下，输出结果如下：
 
-![](/home/ran/gitRepos/RanFang66.github.io/source/_posts/C2000-DSP-踩坑记录：float与字节转换.assets/image-20211012154414486.png)
+![](C2000-DSP-踩坑记录：float与字节转换/image-20211012154414486.png)
 
 说明字节序和float类型之间的相互转换没有问题。
 
