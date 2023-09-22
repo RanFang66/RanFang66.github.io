@@ -5,6 +5,7 @@ categories: Notes
 tags: 
   - MachineLearning
   - embeded
+  - Keras
 ---
 
 ## keras模型的保存和加载
